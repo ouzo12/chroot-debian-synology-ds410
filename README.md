@@ -11,3 +11,17 @@ start with
     mkdir synodebian
     debootstrap --foreign --arch powerpc wheezy synodebian
 
+Now the data should be send to the synology nas
+
+
+    tar cvzpf synodebian.tar.gz synodebian
+    scp synodebian.tar.gz root@minsynologyds410nas:/volume1/
+
+Thats it, you dont have to use the debian server any more. The rest is on the synology nas
+
+At the nas extract the tar file
+
+
+    cd /volume1/
+    tar xvzpf synodebian.tar.gz
+
