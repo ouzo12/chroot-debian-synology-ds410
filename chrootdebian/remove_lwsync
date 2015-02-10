@@ -1,0 +1,14 @@
+#!/bin/bash
+echo "Removing LWSYNC opcode"
+if [ $# -eq 0 ]
+then
+   dirs="/bin /lib /usr/bin /usr/lib /usr/local /sbin"
+else
+   dirs=$@
+fi
+for dir in $dirs
+do
+   echo "   $dir"
+   find $dir -type f -exec /usr/local/bin/remove_lwsync_from_file {} \;
+done
+

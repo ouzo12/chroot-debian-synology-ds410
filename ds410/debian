@@ -1,0 +1,13 @@
+#! /bin/sh
+
+LOCAL_DIR=$(dirname $0)
+ERR_NOCNF=1
+ERR_NOVAR=2
+
+[ ! -f $LOCAL_DIR/debian.conf ] && { echo "ERROR: $LOCAL_DIR/debian.conf not found." >&2 ; exit $ERR_NOCNF ; }
+. $LOCAL_DIR/debian.conf
+[ "$DEBIAN_DIRECTORY" == "" ] && { echo "ERROR: DEBIAN_DIRECTORY variable not found in debian.conf" >&2 ; exit $ERR_NOVAR ; }
+
+[ $# -eq 0 ] && set - bash
+
+chroot $DEBIAN_DIRECTORY $@

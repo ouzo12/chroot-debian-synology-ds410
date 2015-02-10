@@ -1,0 +1,41 @@
+#! /bin/bash
+
+echo "----- $(date) : $@" >>/var/log/S01etworking.log
+
+case $1 in
+   start)  echo -n "Starting eth0:0   : " | tee -a /var/log/S01etworking.log
+           ifdown --force eth0:0 2>&1 >>/var/log/S01etworking.log
+           ifup eth0:0      2>&1 >>/var/log/S01etworking.log
+           if [ "$(ifconfig eth0:0 2>&- | grep UP)" == "" ]
+           then
+              echo "FAILED, please check /var/log/S01etworking.log" | tee -a /var/log/S01etworking.log
+              exit 1
+           else
+              echo "OK" | tee -a /var/log/S01etworking.log
+              exit 0
+           fi
+           ;;
+
+   stop)   echo -n "Stopping eth0:0   : " | tee -a /var/log/S01etworking.log
+           ifdown --force eth0:0 2>&1 >>/var/log/S01etworking.log
+           if [ "$(ifconfig eth0:0 2>&- | grep UP)" == "" ]
+           then
+              echo "FAILED, please check /var/log/S01etworking.log" | tee -a /var/log/S01etworking.log
+              exit 1
+           else
+              echo "OK" | tee -a /var/log/S01etworking.log
+              exit 0
+           fi
+           ;;
+
+   restart)$0 stop
+           $0 start
+           ;;
+
+   status) ifconfig eth0:0
+           ;;
+
+   *)      echo "Syntax: $0 start|stop|restart|status"
+           exit 2
+           ;;
+esac

@@ -1,0 +1,31 @@
+#! /bin/sh
+
+LOCAL_DIR=$(dirname $0)
+ERR_NOCNF=1
+ERR_NOVAR=2
+
+[ ! -f $LOCAL_DIR/debian.conf ] && { echo "ERROR: $LOCAL_DIR/debian.conf not found." >&2 ; exit $ERR_NOCNF ; }
+. /debian.conf
+[ "$DEBIAN_DIRECTORY" == "" ] && { echo "ERROR: DEBIAN_DIRECTORY variable not found in debian.conf" >&2 ; exit $ERR_NOVAR ; }
+
+echo "mounting filesystems :"
+for fs in dev dev/pts proc sys
+do
+   mounted=$(mount | grep -i " $DEBIAN_DIRECTORY/$fs ")
+   if [ "$mounted" = "" ]
+   then
+      echo "   mounting /$fs to $DEBIAN_DIRECTORY/$fs"
+      mount -o bind /$fs $DEBIAN_DIRECTORY/$fs
+   else
+      echo "   $DEBIAN_DIRECTORY/$fs already mounted"
+   fi
+done
+
+echo
+echo "Starting Services"
+for svc in $(ls $DEBIAN_DIRECTORY/etc/init.debian/* 2>&-)
+do
+   service=$(basename $svc xxx)
+   echo -n "   "
+   chroot $DEBIAN_DIRECTORY /etc/init.debian/$service start
+done

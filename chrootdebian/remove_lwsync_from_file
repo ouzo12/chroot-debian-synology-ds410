@@ -1,0 +1,10 @@
+#!/bin/sh
+temp=$(tempfile)
+sed "s/\x7c\x20\x04\xac/\x7c\x00\x04\xac/g" $1 > $temp
+if [ "$(diff -q $1 $temp 2>&1)" != ""  ]
+then
+ dd if=$temp of=$1 >&- 2>&-
+ echo "      updated : $1"
+fi
+rm -f $temp
+
