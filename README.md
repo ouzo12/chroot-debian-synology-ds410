@@ -9,5 +9,5 @@ start with
 
     apt-get install debootstrap
     mkdir synodebian
-    debootstrap .foreign .arch powerpc wheezy synodebian
+    debootstrap --foreign --arch powerpc wheezy synodebian
 
