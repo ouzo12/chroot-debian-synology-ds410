@@ -126,13 +126,16 @@ until [ -n "$fine" ]; do
         ;;
         [Yy])
 
-            echo "DEBIAN_DIRECTORY=$debiandir" > $debconf
+	    if [ -f $debconf ]; then rm $debconf; fi
+	    touch $debconf
+            echo "DEBIAN_DIRECTORY=$debiandir" >> $debconf
             echo "DEBIAN_INTERFACE=$debianif" >> $debconf
             echo "DEBIAN_IP=$debianip" >> $debconf
             echo "DEBIAN_NETMASK=$debianipmask" >> $debconf
             echo "DEBIAN_GATEWAY=$debianipgw" >> $debconf
 	    chmod +x $debconf
             fine="y"
+more
         ;;
         *)
             unset fine
