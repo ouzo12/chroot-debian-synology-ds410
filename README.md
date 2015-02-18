@@ -42,7 +42,7 @@ At the nas extract the tar file
     cd /volume1/
     tar xvzpf synodebian.tar.gz
 
-    wget --no-check-certificate -o /root/deb-setup.sh https://raw.githubusercontent.com/ouzo12/chroot-debian-synology-ds410/master/ds410/setup.sh 
+    wget --no-check-certificate -O /root/deb-setup.sh https://raw.githubusercontent.com/ouzo12/chroot-debian-synology-ds410/master/ds410/setup.sh 
     chmod +x /root/deb-setup.sh
     ./root/deb-setup.sh
 
