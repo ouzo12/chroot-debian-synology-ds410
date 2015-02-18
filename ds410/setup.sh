@@ -135,7 +135,7 @@ until [ -n "$fine" ]; do
             echo "DEBIAN_GATEWAY=$debianipgw" >> $debconf
 	    chmod +x $debconf
             fine="y"
-more
+
         ;;
         *)
             unset fine
@@ -144,7 +144,7 @@ more
     esac
 done
 
-./usr/local/bin/debian.conf
+source $debconf
 wget https://raw.githubusercontent.com/ouzo12/chroot-debian-synology-ds410/master/ds410/S99chrootDebian.sh -o /usr/syno/etc/rc.d/S99chrootDebian.sh
 chmod +x /usr/syno/etc/rc.d/S99chrootDebian.sh
 wget https://raw.githubusercontent.com/ouzo12/chroot-debian-synology-ds410/master/ds410/debian -o /usr/local/bin/debian
