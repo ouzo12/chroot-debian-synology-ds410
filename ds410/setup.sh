@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 debconf=/usr/local/bin/debian.conf
 
 function jumpto
