@@ -12,7 +12,7 @@ telnet or ssh to the synology as root
 
 install some nesassary tools
 
-    ipkg install mc bash less vim man file findutils grep coreutils tar gzip bzip2 xz-utils
+    ipkg install mc bash less vim man file findutils grep coreutils tar gzip bzip2 xz-utils sed
     ipkg remove wget
     ipkg install wget-ssl
     ipkg install optware-devel
