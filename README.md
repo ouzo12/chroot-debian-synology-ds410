@@ -48,3 +48,6 @@ Get the setup file and execute
     chmod +x /root/deb-setup.sh
     ./root/deb-setup.sh
 
+After this setup is done you should be able to run the chroot
+
+    debian
