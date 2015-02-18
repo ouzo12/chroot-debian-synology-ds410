@@ -145,11 +145,11 @@ until [ -n "$fine" ]; do
 done
 
 source $debconf
-wget https://raw.githubusercontent.com/ouzo12/chroot-debian-synology-ds410/master/ds410/S99chrootDebian.sh -o /usr/syno/etc/rc.d/S99chrootDebian.sh
+wget --no-check-certificate https://raw.githubusercontent.com/ouzo12/chroot-debian-synology-ds410/master/ds410/S99chrootDebian.sh -O /usr/syno/etc/rc.d/S99chrootDebian.sh
 chmod +x /usr/syno/etc/rc.d/S99chrootDebian.sh
-wget https://raw.githubusercontent.com/ouzo12/chroot-debian-synology-ds410/master/ds410/debian -o /usr/local/bin/debian
-wget https://raw.githubusercontent.com/ouzo12/chroot-debian-synology-ds410/master/ds410/start_debian -o /usr/local/bin/start_debian
-wget https://raw.githubusercontent.com/ouzo12/chroot-debian-synology-ds410/master/ds410/stop_debian -o /usr/local/bin/stop_debian
+wget --no-check-certificate https://raw.githubusercontent.com/ouzo12/chroot-debian-synology-ds410/master/ds410/debian -O /usr/local/bin/debian
+wget --no-check-certificate https://raw.githubusercontent.com/ouzo12/chroot-debian-synology-ds410/master/ds410/start_debian -O /usr/local/bin/start_debian
+wget --no-check-certificate https://raw.githubusercontent.com/ouzo12/chroot-debian-synology-ds410/master/ds410/stop_debian -O /usr/local/bin/stop_debian
 chmod +x /usr/local/bin/debian
 chmod +x /usr/local/bin/start_debian
 chmod +x /usr/local/bin/stop_debian
