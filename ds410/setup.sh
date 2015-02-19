@@ -15,6 +15,8 @@ jumpto $start
 
 start:
 
+echo -n "If anything goes wrong, I do not take any responsibility for it."
+echo -n "So please read anything, before you accept\n"
 echo -n "Press <enter> to continue. "
 read randomkey
 
@@ -111,7 +113,7 @@ until [ -n "$fine" ]; do
     echo -e "debian chroot ip=$debianip"
     echo -e "debian chroot netmask=$debianipmask"
     echo -e "debian chroot gateway=$debianipgw\n"
-    echo -n "Everything file? [Y]es [N]o: "
+    echo -n "Everything ok? [Y]es [N]o: "
     read fine
     case $fine in
         [Nn])
@@ -144,29 +146,53 @@ until [ -n "$fine" ]; do
     esac
 done
 
+echo -e "Starting downloading some files"
 source $debconf
+echo -e "downloading: /usr/syno/etc/rc.d/S99chrootDebian.sh"
 wget --no-check-certificate https://raw.githubusercontent.com/ouzo12/chroot-debian-synology-ds410/master/ds410/S99chrootDebian.sh -O /usr/syno/etc/rc.d/S99chrootDebian.sh
-chmod +x /usr/syno/etc/rc.d/S99chrootDebian.sh
+echo -e "downloading: /usr/local/bin/debian"
 wget --no-check-certificate https://raw.githubusercontent.com/ouzo12/chroot-debian-synology-ds410/master/ds410/debian -O /usr/local/bin/debian
+echo -e "downloading: /usr/local/bin/start_debian"
 wget --no-check-certificate https://raw.githubusercontent.com/ouzo12/chroot-debian-synology-ds410/master/ds410/start_debian -O /usr/local/bin/start_debian
+echo -e "downloading: /usr/local/bin/stop_debian"
 wget --no-check-certificate https://raw.githubusercontent.com/ouzo12/chroot-debian-synology-ds410/master/ds410/stop_debian -O /usr/local/bin/stop_debian
+echo -e "chmodding files"
+chmod +x /usr/syno/etc/rc.d/S99chrootDebian.sh
 chmod +x /usr/local/bin/debian
 chmod +x /usr/local/bin/start_debian
 chmod +x /usr/local/bin/stop_debian
 
-cp -p /etc/resolv.conf $DEBIAN_DIRECTORY/etc/resolv.conf
-echo "127.0.0.1      localhost" > $DEBIAN_DIRECTORY/etc/hosts
+echo -e "check if the config file was written properly"
+echo -e "is $debiandir the same as $DEBIAN_DIRECTORY"
+until [ -n "$dcheck" ]; do
+    read fine
+    case $fine in
+        [Nn])
+            echo -e "please check for any errors then run deb-setup.sh again"
+            exit 0
+        ;;
+        [Yy])
 
-fs=$(df $DEBIAN_DIRECTORY | grep -v 1K-blocks | cut -d\  -f1)
-fstyp=$(grep "^$fs " /etc/mtab | cut -d\  -f3)
-echo $fs / $fstyp > $DEBIAN_DIRECTORY/etc/mtab
-echo $fs / $fstyp 0 0 > $DEBIAN_DIRECTORY/etc/fstab
+            cp -p /etc/resolv.conf $DEBIAN_DIRECTORY/etc/resolv.conf
+            echo "127.0.0.1      localhost" > $DEBIAN_DIRECTORY/etc/hosts
 
-echo "auto $DEBIAN_INTERFACE" > $DEBIAN_DIRECTORY/etc/network/interfaces
-echo "iface $DEBIAN_INTERFACE inet static" >> $DEBIAN_DIRECTORY/etc/network/interfaces
-echo "       address $DEBIAN_IP" >> $DEBIAN_DIRECTORY/etc/network/interfaces
-echo "       netmask $DEBIAN_NETMASK" >> $DEBIAN_DIRECTORY/etc/network/interfaces
-echo "       gateway $DEBIAN_GATEWAY" >> $DEBIAN_DIRECTORY/etc/network/interfaces
+            fs=$(df $DEBIAN_DIRECTORY | grep -v 1K-blocks | cut -d\  -f1)
+            fstyp=$(grep "^$fs " /etc/mtab | cut -d\  -f3)
+            echo $fs / $fstyp > $DEBIAN_DIRECTORY/etc/mtab
+            echo $fs / $fstyp 0 0 > $DEBIAN_DIRECTORY/etc/fstab
 
+            echo "auto $DEBIAN_INTERFACE" > $DEBIAN_DIRECTORY/etc/network/interfaces
+            echo "iface $DEBIAN_INTERFACE inet static" >> $DEBIAN_DIRECTORY/etc/network/interfaces
+            echo "       address $DEBIAN_IP" >> $DEBIAN_DIRECTORY/etc/network/interfaces
+            echo "       netmask $DEBIAN_NETMASK" >> $DEBIAN_DIRECTORY/etc/network/interfaces
+            echo "       gateway $DEBIAN_GATEWAY" >> $DEBIAN_DIRECTORY/etc/network/interfaces
+            dcheck="y"
+        ;;
+        *)
+            unset dcheck
+            continue
+        ;;
+    esac
+done
 
 exit 0
